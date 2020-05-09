@@ -37,8 +37,11 @@ MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, connection) 
 /**
  * Return all todos
  */
-app.get('/', (req, res) => {
-    res.send('Hello, sent from todo-server app.js');
+app.get('/todos', (req, res) => {
+    collection.find({}).toArray(function(err, result) {
+        if (err) throw err;
+        res.send(result);
+    });
 });
 
 /**
