@@ -1,0 +1,22 @@
+{
+  "name": "soe-angular-todo-server",
+  "version": "1.0.0",
+  "description": "soe-angular-todo-server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chischte/soe-angular-todo-server.git"
+  },
+  "author": "michi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chischte/soe-angular-todo-server/issues"
+  },
+  "homepage": "https://github.com/chischte/soe-angular-todo-server#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
