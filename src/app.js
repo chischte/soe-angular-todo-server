@@ -1,18 +1,71 @@
-// import the express dependency
 const express = require('express');
+const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
 
-// create express app
 const app = express();
-
-// define a variable for the port
 const port = 3000;
 
-// handle GET request on route '/'
-app.get('/', (req, res) => {
-    res.send('Hello World!');
+const MongoClient = mongodb.MongoClient;
+const url = "mongodb://localhost:27017";
+
+
+const dbName = 'todoApp';
+const collectionName = 'todos';
+let db = undefined;
+let collection = undefined;
+
+/**
+ * Setup express middleware
+ */
+app.use(bodyParser.json());
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    next();
 });
 
-// start server
+/**
+ * Connect to database
+ */
+MongoClient.connect(url,{ useUnifiedTopology: true }, function(err, connection) {
+    if (err) throw err;
+    db = connection.db(dbName);
+    collection = db.collection(collectionName);
+});
+
+/**
+ * Return all todos
+ */
+app.get('/', (req, res) => {
+    res.send('Hello, sent from todo-server app.js');
+});
+
+/**
+ * Insert one todo
+ */
+app.post('/todo', (req, res) => {
+    const todo = req.body;
+    collection.insertOne(todo, function(err, result) {
+        if (err) throw err;
+        res.send({result: 'todo inserted', todo: todo});
+    });
+});
+
+/**
+ * Delete todo by id
+ */
+app.delete('/todo/:id', (req, res) => {
+    const query = { _id: new mongodb.ObjectID(req.params.id) };
+    collection.deleteOne(query, function(err, obj) {
+        if (err) throw err;
+        res.send({result: 'todo deleted'});
+    });
+});
+
+/**
+ * Start server
+ */
 app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
+    console.log(`Todo app listening at http://localhost:${port}`);
 });
